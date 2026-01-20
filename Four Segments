@@ -1,0 +1,83 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static class Seg {
+        long x1, y1, x2, y2;
+        Seg(long a, long b, long c, long d) {
+            x1 = a; y1 = b; x2 = c; y2 = d;
+            if (x1 > x2 || y1 > y2) {
+                long t;
+                if (x1 > x2) { t = x1; x1 = x2; x2 = t; }
+                if (y1 > y2) { t = y1; y1 = y2; y2 = t; }
+            }
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        Seg[] s = new Seg[4];
+
+        for (int i = 0; i < 4; i++) {
+            String[] p = br.readLine().split(" ");
+            s[i] = new Seg(
+                Long.parseLong(p[0]),
+                Long.parseLong(p[1]),
+                Long.parseLong(p[2]),
+                Long.parseLong(p[3])
+            );
+        }
+
+        List<Seg> h = new ArrayList<>(), v = new ArrayList<>();
+        for (Seg e : s) {
+            if (e.y1 == e.y2 && e.x1 < e.x2) h.add(e);
+            else if (e.x1 == e.x2 && e.y1 < e.y2) v.add(e);
+            else {
+                System.out.println("NO");
+                return;
+            }
+        }
+
+        if (h.size() != 2 || v.size() != 2) {
+            System.out.println("NO");
+            return;
+        }
+
+        long yA = h.get(0).y1, yB = h.get(1).y1;
+        long xA = v.get(0).x1, xB = v.get(1).x1;
+
+        if (yA == yB || xA == xB) {
+            System.out.println("NO");
+            return;
+        }
+
+        Set<String> corners = new HashSet<>();
+        for (Seg e : h) {
+            corners.add(e.x1 + "," + e.y1);
+            corners.add(e.x2 + "," + e.y2);
+        }
+        for (Seg e : v) {
+            corners.add(e.x1 + "," + e.y1);
+            corners.add(e.x2 + "," + e.y2);
+        }
+
+        if (corners.size() != 4) {
+            System.out.println("NO");
+            return;
+        }
+
+        for (Seg e : h)
+            if (!((e.x1 == xA && e.x2 == xB) || (e.x1 == xB && e.x2 == xA))) {
+                System.out.println("NO");
+                return;
+            }
+
+        for (Seg e : v)
+            if (!((e.y1 == yA && e.y2 == yB) || (e.y1 == yB && e.y2 == yA))) {
+                System.out.println("NO");
+                return;
+            }
+
+        System.out.println("YES");
+    }
+}
