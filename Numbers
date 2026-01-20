@@ -1,0 +1,36 @@
+import java.io.*;
+
+public class Main {
+    static int sumDigits(int a, int b) {
+        int s = 0;
+        while (a > 0) {
+            s += a % b;
+            a /= b;
+        }
+        return s;
+    }
+
+    static int gcd(int a, int b) {
+        while (b != 0) {
+            int t = a % b;
+            a = b;
+            b = t;
+        }
+        return a;
+    }
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int A = Integer.parseInt(br.readLine().trim());
+
+        int total = 0;
+        for (int b = 2; b < A; b++) {
+            total += sumDigits(A, b);
+        }
+
+        int denom = A - 2;
+        int g = gcd(total, denom);
+
+        System.out.println((total / g) + "/" + (denom / g));
+    }
+}
