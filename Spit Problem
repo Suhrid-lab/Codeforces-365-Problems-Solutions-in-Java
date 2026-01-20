@@ -1,0 +1,31 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine().trim());
+
+        Map<Integer, Integer> map = new HashMap<>();
+
+        for (int i = 0; i < n; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int x = Integer.parseInt(st.nextToken());
+            int d = Integer.parseInt(st.nextToken());
+            map.put(x, d);
+        }
+
+        for (Map.Entry<Integer, Integer> e : map.entrySet()) {
+            int x = e.getKey();
+            int d = e.getValue();
+            int target = x + d;
+
+            if (map.containsKey(target) && target + map.get(target) == x) {
+                System.out.println("YES");
+                return;
+            }
+        }
+
+        System.out.println("NO");
+    }
+}
