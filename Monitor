@@ -1,0 +1,27 @@
+import java.io.*;
+
+public class Monitor {
+    static long gcd(long a, long b) {
+        return b == 0 ? a : gcd(b, a % b);
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] s = br.readLine().split(" ");
+        long a = Long.parseLong(s[0]);
+        long b = Long.parseLong(s[1]);
+        long x = Long.parseLong(s[2]);
+        long y = Long.parseLong(s[3]);
+
+        long g = gcd(x, y);
+        x /= g;
+        y /= g;
+
+        long k = Math.min(a / x, b / y);
+        if (k == 0) {
+            System.out.println("0 0");
+        } else {
+            System.out.println(k * x + " " + k * y);
+        }
+    }
+}
