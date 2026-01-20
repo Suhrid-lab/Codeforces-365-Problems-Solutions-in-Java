@@ -1,0 +1,23 @@
+import java.io.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String s = br.readLine();
+
+        int cnt = 1;
+        for (int i = 1; i < s.length(); i++) {
+            if (s.charAt(i) == s.charAt(i - 1)) {
+                cnt++;
+                if (cnt == 7) {
+                    System.out.print("YES");
+                    return;
+                }
+            } else {
+                cnt = 1;
+            }
+        }
+
+        System.out.print("NO");
+    }
+}
