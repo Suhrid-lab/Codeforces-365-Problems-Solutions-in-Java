@@ -1,0 +1,22 @@
+import java.util.*;
+
+public class Main {
+    static long fact(int n) {
+        long r = 1;
+        for (int i = 2; i <= n; i++) r *= i;
+        return r;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int k = n / 2;
+
+        long fn = fact(n);
+        long fk = fact(k);
+        long ways = fn / (fk * fk);        // C(n, n/2)
+        ways = ways * fact(k - 1) * fact(k - 1) / 2;
+
+        System.out.println(ways);
+    }
+}
