@@ -1,0 +1,27 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String s = br.readLine().trim();
+
+        long result = 0;
+        int len = s.length();
+
+        // Count lucky numbers with fewer digits
+        for (int i = 1; i < len; i++) {
+            result += 1L << i;
+        }
+
+        // Count lucky numbers of same length before s
+        for (int i = 0; i < len; i++) {
+            if (s.charAt(i) == '7') {
+                result += 1L << (len - i - 1);
+            }
+        }
+
+        // 1-based index
+        System.out.println(result + 1);
+    }
+}
