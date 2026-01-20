@@ -1,0 +1,65 @@
+import java.io.*;
+
+public class Main {
+    static final int UP = 0, DOWN = 1;
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] in = br.readLine().trim().split("\\s+");
+        int n = Integer.parseInt(in[0]);
+        int t = Integer.parseInt(in[1]);
+
+        long[][][][][] dp = new long[n + 1][5][2][t + 1][t];
+        
+        // position 1
+        for (int y = 1; y <= 4; y++) {
+            // dummy trend, will be set at pos=2
+            dp[1][y][UP][0][0] = 1;
+        }
+
+        // position 2
+        for (int y1 = 1; y1 <= 4; y1++) {
+            for (int y2 = 1; y2 <= 4; y2++) {
+                if (y1 == y2) continue;
+                int tr = (y2 > y1) ? UP : DOWN;
+                dp[2][y2][tr][0][0] += dp[1][y1][UP][0][0];
+            }
+        }
+
+        // positions 3..n
+        for (int i = 3; i <= n; i++) {
+            for (int last = 1; last <= 4; last++) {
+                for (int tr = 0; tr < 2; tr++) {
+                    for (int p = 0; p <= t; p++) {
+                        for (int v = 0; v < t; v++) {
+                            long cur = dp[i - 1][last][tr][p][v];
+                            if (cur == 0) continue;
+
+                            for (int y = 1; y <= 4; y++) {
+                                if (y == last) continue;
+                                int ntr = (y > last) ? UP : DOWN;
+                                int np = p, nv = v;
+
+                                if (tr == UP && ntr == DOWN) np++;
+                                else if (tr == DOWN && ntr == UP) nv++;
+
+                                if (np <= t && nv < t) {
+                                    dp[i][y][ntr][np][nv] += cur;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        long ans = 0;
+        for (int y = 1; y <= 4; y++) {
+            for (int tr = 0; tr < 2; tr++) {
+                ans += dp[n][y][tr][t][t - 1];
+            }
+        }
+
+        System.out.println(ans);
+    }
+}
