@@ -1,0 +1,31 @@
+import java.util.Scanner;
+
+public class B_Platforms {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int d = sc.nextInt();
+        int m = sc.nextInt();
+        int l = sc.nextInt();
+
+        long curJ = 0;  // current jump index (0‑based)
+        for (int i = 0; i < n; i++) {
+            long left = (long) i * m;
+            long right = left + l;
+
+            long L = (left + d - 1) / d;   // ceil(left / d)
+            long R = right / d;            // floor(right / d)
+
+            if (L <= R) {                  // there is at least one jump landing on this platform
+                if (L > curJ) {
+                    System.out.println(curJ * d);
+                    return;
+                }
+                if (R >= curJ) {
+                    curJ = R + 1;
+                }
+            }
+        }
+        System.out.println(curJ * d);
+    }
+}
