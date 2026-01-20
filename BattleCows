@@ -1,0 +1,142 @@
+import java.io.*;
+import java.util.*;
+
+public class BattleCows {
+    static FastScanner sc = new FastScanner();
+    static PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(System.out)));
+    
+    static int n, N;
+    static int[] a;
+    static int[] winner, xor;
+    
+    public static void main(String[] args) throws IOException {
+        int t = sc.nextInt();
+        while (t-- > 0) {
+            solve();
+        }
+        out.close();
+    }
+    
+    static void solve() throws IOException {
+        n = sc.nextInt();
+        int q = sc.nextInt();
+        N = 1 << n;
+        
+        a = new int[N];
+        for (int i = 0; i < N; i++) {
+            a[i] = sc.nextInt();
+        }
+        
+        // Initialize segment tree arrays (1-based, size 2*N)
+        winner = new int[2 * N];
+        xor = new int[2 * N];
+        
+        // Build the tree with original values
+        buildTree();
+        
+        // Process queries
+        while (q-- > 0) {
+            int idx = sc.nextInt() - 1;  // Convert to 0-indexed
+            int newVal = sc.nextInt();
+            
+            // Save original values along the path
+            int depth = n + 1;  // leaf + n ancestors
+            int[] path = new int[depth];
+            int[] saveWinner = new int[depth];
+            int[] saveXor = new int[depth];
+            
+            int pos = idx + N;
+            int d = 0;
+            while (pos > 0) {
+                path[d] = pos;
+                saveWinner[d] = winner[pos];
+                saveXor[d] = xor[pos];
+                d++;
+                pos /= 2;
+            }
+            
+            // Update leaf with new value
+            pos = idx + N;
+            xor[pos] = newVal;
+            winner[pos] = idx;
+            
+            // Update ancestors
+            for (pos = pos / 2; pos > 0; pos /= 2) {
+                updateNode(pos);
+            }
+            
+            // Calculate answer
+            int count = 0;
+            int level = 0;
+            pos = idx + N;
+            while (pos > 1) {
+                int parent = pos / 2;
+                if (winner[parent] != winner[pos]) {
+                    // Lost at this level - all cows from sibling go above
+                    count += (1 << level);
+                }
+                level++;
+                pos = parent;
+            }
+            
+            out.println(count);
+            
+            // Restore original values
+            for (int i = 0; i < depth; i++) {
+                int v = path[i];
+                winner[v] = saveWinner[i];
+                xor[v] = saveXor[i];
+            }
+        }
+    }
+    
+    static void buildTree() {
+        // Initialize leaves
+        for (int i = 0; i < N; i++) {
+            winner[N + i] = i;
+            xor[N + i] = a[i];
+        }
+        
+        // Build from leaves up to root
+        for (int i = N - 1; i > 0; i--) {
+            updateNode(i);
+        }
+    }
+    
+    static void updateNode(int i) {
+        int left = 2 * i;
+        int right = 2 * i + 1;
+        
+        if (xor[left] > xor[right]) {
+            winner[i] = winner[left];
+            xor[i] = xor[left] ^ xor[right];
+        } else if (xor[right] > xor[left]) {
+            winner[i] = winner[right];
+            xor[i] = xor[left] ^ xor[right];
+        } else {
+            // Tie: left-most stack wins
+            winner[i] = winner[left];
+            xor[i] = xor[left] ^ xor[right];
+        }
+    }
+    
+    static class FastScanner {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer("");
+        
+        String next() throws IOException {
+            while (!st.hasMoreTokens()) {
+                st = new StringTokenizer(br.readLine());
+            }
+            return st.nextToken();
+        }
+        
+        int nextInt() throws IOException {
+            return Integer.parseInt(next());
+        }
+        
+        long nextLong() throws IOException {
+            return Long.parseLong(next());
+        }
+    }
+}
