@@ -1,0 +1,118 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static class Edge {
+        int to;
+        long w;
+        Edge(int t, long w) { this.to = t; this.w = w; }
+    }
+
+    static class Node implements Comparable<Node> {
+        int v;
+        long d;
+        Node(int v, long d) { this.v = v; this.d = d; }
+        public int compareTo(Node o) {
+            return Long.compare(this.d, o.d);
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        FastScanner fs = new FastScanner(System.in);
+        int n = fs.nextInt();
+        int m = fs.nextInt();
+
+        List<Edge>[] g = new ArrayList[n + 1];
+        for (int i = 1; i <= n; i++) g[i] = new ArrayList<>();
+
+        for (int i = 0; i < m; i++) {
+            int a = fs.nextInt();
+            int b = fs.nextInt();
+            long w = fs.nextLong();
+            g[a].add(new Edge(b, w));
+            g[b].add(new Edge(a, w));
+        }
+
+        long[] dist = new long[n + 1];
+        int[] parent = new int[n + 1];
+        Arrays.fill(dist, Long.MAX_VALUE);
+        Arrays.fill(parent, -1);
+
+        PriorityQueue<Node> pq = new PriorityQueue<>();
+        dist[1] = 0;
+        pq.add(new Node(1, 0));
+
+        while (!pq.isEmpty()) {
+            Node cur = pq.poll();
+            if (cur.d != dist[cur.v]) continue;
+            if (cur.v == n) break;
+
+            for (Edge e : g[cur.v]) {
+                long nd = cur.d + e.w;
+                if (nd < dist[e.to]) {
+                    dist[e.to] = nd;
+                    parent[e.to] = cur.v;
+                    pq.add(new Node(e.to, nd));
+                }
+            }
+        }
+
+        if (dist[n] == Long.MAX_VALUE) {
+            System.out.print("-1");
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        int v = n;
+        while (v != -1) {
+            sb.append(v).append(' ');
+            v = parent[v];
+        }
+
+        String[] path = sb.toString().trim().split(" ");
+        for (int i = path.length - 1; i >= 0; i--) {
+            System.out.print(path[i]);
+            if (i > 0) System.out.print(" ");
+        }
+    }
+
+    // Fast input for large data
+    static class FastScanner {
+        private final byte[] buffer = new byte[1 << 16];
+        private int ptr = 0, len = 0;
+        private final InputStream in;
+        FastScanner(InputStream in) { this.in = in; }
+
+        int read() throws IOException {
+            if (ptr >= len) {
+                len = in.read(buffer);
+                ptr = 0;
+                if (len <= 0) return -1;
+            }
+            return buffer[ptr++];
+        }
+
+        int nextInt() throws IOException {
+            int c, s = 1, x = 0;
+            do { c = read(); } while (c <= ' ');
+            if (c == '-') { s = -1; c = read(); }
+            while (c > ' ') {
+                x = x * 10 + c - '0';
+                c = read();
+            }
+            return x * s;
+        }
+
+        long nextLong() throws IOException {
+            int c, s = 1;
+            long x = 0;
+            do { c = read(); } while (c <= ' ');
+            if (c == '-') { s = -1; c = read(); }
+            while (c > ' ') {
+                x = x * 10 + c - '0';
+                c = read();
+            }
+            return x * s;
+        }
+    }
+}
