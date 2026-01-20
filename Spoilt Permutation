@@ -1,0 +1,44 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine().trim());
+
+        int[] a = new int[n + 1];
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        for (int i = 1; i <= n; i++) {
+            a[i] = Integer.parseInt(st.nextToken());
+        }
+
+        int l = 1;
+        while (l <= n && a[l] == l) l++;
+
+        if (l > n) {
+            System.out.print("0 0");
+            return;
+        }
+
+        int r = l;
+        while (r + 1 <= n && a[r + 1] == a[r] - 1) r++;
+
+        // Check if reversing [l, r] fixes everything
+        for (int i = l; i <= r; i++) {
+            if (a[i] != r - (i - l)) {
+                System.out.print("0 0");
+                return;
+            }
+        }
+
+        // Check remaining part
+        for (int i = r + 1; i <= n; i++) {
+            if (a[i] != i) {
+                System.out.print("0 0");
+                return;
+            }
+        }
+
+        System.out.print(l + " " + r);
+    }
+}
