@@ -1,0 +1,46 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        int n = Integer.parseInt(br.readLine().trim());
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int k1 = Integer.parseInt(st.nextToken());
+        Queue<Integer> q1 = new ArrayDeque<>();
+        for (int i = 0; i < k1; i++) q1.add(Integer.parseInt(st.nextToken()));
+
+        st = new StringTokenizer(br.readLine());
+        int k2 = Integer.parseInt(st.nextToken());
+        Queue<Integer> q2 = new ArrayDeque<>();
+        for (int i = 0; i < k2; i++) q2.add(Integer.parseInt(st.nextToken()));
+
+        HashSet<String> seen = new HashSet<>();
+        int fights = 0;
+
+        while (!q1.isEmpty() && !q2.isEmpty()) {
+            String state = q1.toString() + "|" + q2.toString();
+            if (!seen.add(state)) {
+                System.out.print("-1");
+                return;
+            }
+
+            int a = q1.poll();
+            int b = q2.poll();
+
+            if (a > b) {
+                q1.add(b); // opponent first
+                q1.add(a); // then own card
+            } else {
+                q2.add(a);
+                q2.add(b);
+            }
+
+            fights++;
+        }
+
+        System.out.print(fights + " " + (q1.isEmpty() ? 2 : 1));
+    }
+}
