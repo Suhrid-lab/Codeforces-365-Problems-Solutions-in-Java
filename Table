@@ -1,0 +1,10 @@
+# Read input
+gets stdin line
+lassign $line n m k
+
+# Compute row and column (0-based)
+set row [expr {($k - 1) % $n}]
+set col [expr {($k - 1) / $n}]
+
+# Compute and print result
+puts [expr {$row * $m + $col + 1}]
