@@ -1,0 +1,90 @@
+import java.util.Scanner;
+
+public class HideAndSeek {
+    static class Point {
+        double x, y;
+        Point(double x, double y) { this.x = x; this.y = y; }
+    }
+    
+    static final double EPS = 1e-9;
+    
+    static double cross(Point a, Point b, Point c) {
+        return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+    }
+    
+    static boolean onSegment(Point a, Point b, Point c) {
+        return Math.min(a.x, b.x) <= c.x + EPS && c.x <= Math.max(a.x, b.x) + EPS &&
+               Math.min(a.y, b.y) <= c.y + EPS && c.y <= Math.max(a.y, b.y) + EPS;
+    }
+    
+    static boolean segmentsIntersect(Point a, Point b, Point c, Point d) {
+        double o1 = cross(a, b, c);
+        double o2 = cross(a, b, d);
+        double o3 = cross(c, d, a);
+        double o4 = cross(c, d, b);
+        if (Math.abs(o1) < EPS && onSegment(a, b, c)) return true;
+        if (Math.abs(o2) < EPS && onSegment(a, b, d)) return true;
+        if (Math.abs(o3) < EPS && onSegment(c, d, a)) return true;
+        if (Math.abs(o4) < EPS && onSegment(c, d, b)) return true;
+        return o1 * o2 < -EPS && o3 * o4 < -EPS;
+    }
+    
+    static Point reflect(Point p, Point m1, Point m2) {
+        double dx = m2.x - m1.x, dy = m2.y - m1.y;
+        double det = dx * dx + dy * dy;
+        double a = (dx * (p.x - m1.x) + dy * (p.y - m1.y)) / det;
+        double px = m1.x + a * dx, py = m1.y + a * dy;
+        return new Point(2 * px - p.x, 2 * py - p.y);
+    }
+    
+    static Point lineIntersection(Point a1, Point a2, Point b1, Point b2) {
+        double dx1 = a2.x - a1.x, dy1 = a2.y - a1.y;
+        double dx2 = b2.x - b1.x, dy2 = b2.y - b1.y;
+        double det = dx1 * dy2 - dy1 * dx2;
+        if (Math.abs(det) < EPS) return null;
+        double t = ((b1.x - a1.x) * dy2 - (b1.y - a1.y) * dx2) / det;
+        return new Point(a1.x + t * dx1, a1.y + t * dy1);
+    }
+    
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Point V = new Point(sc.nextDouble(), sc.nextDouble());
+        Point P = new Point(sc.nextDouble(), sc.nextDouble());
+        Point W1 = new Point(sc.nextDouble(), sc.nextDouble());
+        Point W2 = new Point(sc.nextDouble(), sc.nextDouble());
+        Point M1 = new Point(sc.nextDouble(), sc.nextDouble());
+        Point M2 = new Point(sc.nextDouble(), sc.nextDouble());
+        
+        // Direct vision
+        boolean direct = false;
+        if (!segmentsIntersect(V, P, W1, W2)) {
+            if (segmentsIntersect(V, P, M1, M2)) {
+                // check if parallel to mirror
+                double cr = (P.x - V.x) * (M2.y - M1.y) - (P.y - V.y) * (M2.x - M1.x);
+                if (Math.abs(cr) < EPS) direct = true;
+            } else {
+                direct = true;
+            }
+        }
+        if (direct) {
+            System.out.println("YES");
+            return;
+        }
+        
+        // Reflected vision
+        double sideV = cross(M1, M2, V);
+        double sideP = cross(M1, M2, P);
+        if (sideV * sideP > EPS) { // same side
+            Point Pr = reflect(P, M1, M2);
+            Point X = lineIntersection(V, Pr, M1, M2);
+            if (X != null && onSegment(M1, M2, X) && onSegment(V, Pr, X)) {
+                if (!segmentsIntersect(V, X, W1, W2) && !segmentsIntersect(X, P, W1, W2)) {
+                    System.out.println("YES");
+                    return;
+                }
+            }
+        }
+        
+        System.out.println("NO");
+    }
+}
