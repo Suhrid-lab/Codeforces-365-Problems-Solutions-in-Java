@@ -1,0 +1,49 @@
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        long A = sc.nextLong();
+        long B = sc.nextLong();
+        int n = sc.nextInt();
+
+        if (A == 0) {
+            System.out.println(B == 0 ? 0 : "No solution");
+            return;
+        }
+
+        if (B % A != 0) {
+            System.out.println("No solution");
+            return;
+        }
+
+        long Y = B / A;
+
+        if (Y == 0) {
+            System.out.println(0);
+            return;
+        }
+
+        long absY = Math.abs(Y);
+        long x = Math.round(Math.pow(absY, 1.0 / n));
+
+        for (long cand = Math.max(0, x - 1); cand <= x + 1; cand++) {
+            long val = 1;
+            for (int i = 0; i < n; i++) val *= cand;
+
+            if (val == absY) {
+                if (Y < 0) {
+                    if (n % 2 == 0) {
+                        System.out.println("No solution");
+                        return;
+                    }
+                    cand = -cand;
+                }
+                System.out.println(cand);
+                return;
+            }
+        }
+
+        System.out.println("No solution");
+    }
+}
