@@ -1,0 +1,32 @@
+import java.io.*;
+
+public class Main {
+
+    static long prefXor(long n) {
+        switch ((int)(n & 3)) {
+            case 0: return n;
+            case 1: return 1;
+            case 2: return n + 1;
+            default: return 0;
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine().trim());
+
+        long nim = 0;
+        for (int i = 0; i < n; i++) {
+            String[] s = br.readLine().split(" ");
+            long x = Long.parseLong(s[0]);
+            long m = Long.parseLong(s[1]);
+
+            long l = x;
+            long r = x + m - 1;
+
+            nim ^= prefXor(r) ^ prefXor(l - 1);
+        }
+
+        System.out.println(nim != 0 ? "tolik" : "bolik");
+    }
+}
