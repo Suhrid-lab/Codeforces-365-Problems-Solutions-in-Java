@@ -1,0 +1,27 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder out = new StringBuilder();
+        int n = Integer.parseInt(br.readLine().trim());
+
+        HashMap<String, Integer> map = new HashMap<>();
+
+        while (n-- > 0) {
+            String s = br.readLine().trim();
+            if (!map.containsKey(s)) {
+                map.put(s, 1);
+                out.append("OK\n");
+            } else {
+                int cnt = map.get(s);
+                String newName = s + cnt;
+                map.put(s, cnt + 1);
+                map.put(newName, 1);
+                out.append(newName).append('\n');
+            }
+        }
+        System.out.print(out);
+    }
+}
