@@ -1,0 +1,32 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+
+        int L = 1, R = n;
+
+        for (int i = 0; i < m; i++) {
+            String line = br.readLine();
+            String[] parts = line.split(" ");
+            int x = Integer.parseInt(parts[parts.length - 1]);
+
+            if (line.contains("left")) {
+                R = Math.min(R, x - 1);
+            } else {
+                L = Math.max(L, x + 1);
+            }
+        }
+
+        if (L > R) {
+            System.out.print(-1);
+        } else {
+            System.out.print(R - L + 1);
+        }
+    }
+}
