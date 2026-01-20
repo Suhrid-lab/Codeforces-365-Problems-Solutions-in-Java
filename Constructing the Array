@@ -1,0 +1,49 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static class Seg {
+        int l, r;
+        Seg(int l, int r) { this.l = l; this.r = r; }
+    }
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder out = new StringBuilder();
+        int t = Integer.parseInt(br.readLine().trim());
+
+        while (t-- > 0) {
+            int n = Integer.parseInt(br.readLine().trim());
+            int[] a = new int[n + 1];
+
+            PriorityQueue<Seg> pq = new PriorityQueue<>(
+                (x, y) -> {
+                    int len1 = x.r - x.l;
+                    int len2 = y.r - y.l;
+                    if (len1 != len2) return len2 - len1;
+                    return x.l - y.l;
+                }
+            );
+
+            pq.add(new Seg(1, n));
+            int cur = 1;
+
+            while (!pq.isEmpty()) {
+                Seg s = pq.poll();
+                int l = s.l, r = s.r;
+                if (l > r) continue;
+
+                int mid = (l + r) / 2;
+                a[mid] = cur++;
+
+                pq.add(new Seg(l, mid - 1));
+                pq.add(new Seg(mid + 1, r));
+            }
+
+            for (int i = 1; i <= n; i++) {
+                out.append(a[i]).append(i == n ? '\n' : ' ');
+            }
+        }
+        System.out.print(out);
+    }
+}
