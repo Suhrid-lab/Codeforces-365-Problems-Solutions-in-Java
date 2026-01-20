@@ -1,0 +1,48 @@
+# Read number of participants
+gets stdin n
+
+set players {}
+
+# Read input
+for {set i 0} {$i < $n} {incr i} {
+    gets stdin line
+    lassign $line name score
+    lappend players [list $name $score]
+}
+
+# Sort: score descending, name ascending
+set players [lsort -command {apply {{a b} {
+    set sa [lindex $a 1]
+    set sb [lindex $b 1]
+    if {$sa != $sb} {
+        return [expr {$sb - $sa}]
+    }
+    return [string compare [lindex $a 0] [lindex $b 0]]
+}}} $players]
+
+set place 1
+set i 0
+while {$i < $n} {
+    set j $i
+    set score [lindex [lindex $players $i] 1]
+
+    # Find range of equal scores
+    while {$j < $n && [lindex [lindex $players $j] 1] == $score} {
+        incr j
+    }
+
+    set from $place
+    set to [expr {$place + ($j - $i) - 1}]
+
+    for {set k $i} {$k < $j} {incr k} {
+        set name [lindex [lindex $players $k] 0]
+        if {$from == $to} {
+            puts "$from $name"
+        } else {
+            puts "$from-$to $name"
+        }
+    }
+
+    set place [expr {$place + ($j - $i)}]
+    set i $j
+}
