@@ -1,0 +1,91 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        FastScanner fs = new FastScanner(System.in);
+
+        int n = fs.nextInt();
+        int k = fs.nextInt(); // length of s (not strictly needed)
+        String s = fs.next();
+
+        // positions of each letter in s
+        ArrayList<Integer>[] pos = new ArrayList[26];
+        for (int i = 0; i < 26; i++) pos[i] = new ArrayList<>();
+
+        for (int i = 0; i < s.length(); i++) {
+            pos[s.charAt(i) - 'a'].add(i);
+        }
+
+        StringBuilder out = new StringBuilder();
+
+        for (int _ = 0; _ < n; _++) {
+            String c = fs.next();
+            int len = c.length();
+            long F = 0;
+
+            for (int i = 0; i < len; i++) {
+                ArrayList<Integer> list = pos[c.charAt(i) - 'a'];
+                if (list.isEmpty()) {
+                    F += len;
+                } else {
+                    int p = Collections.binarySearch(list, i);
+                    if (p >= 0) {
+                        // exact match
+                        continue;
+                    }
+                    p = -p - 1;
+                    int best = Integer.MAX_VALUE;
+                    if (p < list.size())
+                        best = Math.abs(list.get(p) - i);
+                    if (p > 0)
+                        best = Math.min(best, Math.abs(list.get(p - 1) - i));
+                    F += best;
+                }
+            }
+
+            out.append(F).append('\n');
+        }
+
+        System.out.print(out.toString());
+    }
+
+    // Fast input
+    static class FastScanner {
+        private final byte[] buffer = new byte[1 << 16];
+        private int ptr = 0, len = 0;
+        private final InputStream in;
+        FastScanner(InputStream in) { this.in = in; }
+
+        int read() throws IOException {
+            if (ptr >= len) {
+                len = in.read(buffer);
+                ptr = 0;
+                if (len <= 0) return -1;
+            }
+            return buffer[ptr++];
+        }
+
+        int nextInt() throws IOException {
+            int c, sgn = 1, x = 0;
+            do { c = read(); } while (c <= ' ');
+            if (c == '-') { sgn = -1; c = read(); }
+            while (c > ' ') {
+                x = x * 10 + (c - '0');
+                c = read();
+            }
+            return x * sgn;
+        }
+
+        String next() throws IOException {
+            int c;
+            StringBuilder sb = new StringBuilder();
+            do { c = read(); } while (c <= ' ');
+            while (c > ' ') {
+                sb.append((char) c);
+                c = read();
+            }
+            return sb.toString();
+        }
+    }
+}
