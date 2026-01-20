@@ -1,0 +1,30 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder out = new StringBuilder();
+        int t = Integer.parseInt(br.readLine().trim());
+
+        while (t-- > 0) {
+            int n = Integer.parseInt(br.readLine().trim());
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int[] a = new int[n];
+
+            for (int i = 0; i < n; i++) a[i] = Integer.parseInt(st.nextToken());
+
+            int common;
+            if (a[0] == a[1] || a[0] == a[2]) common = a[0];
+            else common = a[1];
+
+            for (int i = 0; i < n; i++) {
+                if (a[i] != common) {
+                    out.append(i + 1).append('\n');
+                    break;
+                }
+            }
+        }
+        System.out.print(out.toString());
+    }
+}
