@@ -1,0 +1,26 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static boolean ok(int g, int b) {
+        return b >= g - 1 && b <= 2 * g + 2;
+    }
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int gl = Integer.parseInt(st.nextToken());
+        int gr = Integer.parseInt(st.nextToken());
+
+        st = new StringTokenizer(br.readLine());
+        int bl = Integer.parseInt(st.nextToken());
+        int brf = Integer.parseInt(st.nextToken());
+
+        boolean possible =
+                ok(gl, brf) ||
+                ok(gr, bl);
+
+        System.out.print(possible ? "YES" : "NO");
+    }
+}
