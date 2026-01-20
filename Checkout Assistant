@@ -1,0 +1,39 @@
+import java.util.*;
+import java.io.*;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine().trim());
+        int[] t = new int[n];
+        long[] c = new long[n];
+        for (int i = 0; i < n; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            t[i] = Integer.parseInt(st.nextToken());
+            c[i] = Long.parseLong(st.nextToken());
+        }
+
+        // weight = t[i] + 1, value = c[i]
+        // we need total weight >= n, minimize total value
+        int maxWeight = n + 2000; // enough upper bound
+        long INF = Long.MAX_VALUE / 2;
+        long[] dp = new long[maxWeight + 1];
+        Arrays.fill(dp, INF);
+        dp[0] = 0;
+
+        for (int i = 0; i < n; i++) {
+            int w = t[i] + 1;
+            for (int j = maxWeight; j >= w; j--) {
+                if (dp[j - w] + c[i] < dp[j]) {
+                    dp[j] = dp[j - w] + c[i];
+                }
+            }
+        }
+
+        long ans = INF;
+        for (int j = n; j <= maxWeight; j++) {
+            ans = Math.min(ans, dp[j]);
+        }
+        System.out.println(ans);
+    }
+}
