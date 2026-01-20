@@ -1,0 +1,27 @@
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int upSum = 0, lowSum = 0;
+        boolean hasOddPair = false;
+        
+        for (int i = 0; i < n; i++) {
+            int x = sc.nextInt();
+            int y = sc.nextInt();
+            upSum += x;
+            lowSum += y;
+            if ((x + y) % 2 == 1) hasOddPair = true;
+        }
+        
+        if (upSum % 2 == 0 && lowSum % 2 == 0) {
+            System.out.println(0);
+        } else if (upSum % 2 == 1 && lowSum % 2 == 1 && hasOddPair && n > 1) {
+            System.out.println(1);
+        } else {
+            System.out.println(-1);
+        }
+        sc.close();
+    }
+}
