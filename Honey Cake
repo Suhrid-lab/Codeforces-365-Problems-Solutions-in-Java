@@ -1,0 +1,61 @@
+import java.util.*;
+import java.io.*;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        long w = Long.parseLong(st.nextToken());
+        long h = Long.parseLong(st.nextToken());
+        long d = Long.parseLong(st.nextToken());
+        long n = Long.parseLong(br.readLine());
+
+        // Collect all divisors of n
+        List<Long> divsN = new ArrayList<>();
+        for (long i = 1; i * i <= n; i++) {
+            if (n % i == 0) {
+                divsN.add(i);
+                if (i != n / i) {
+                    divsN.add(n / i);
+                }
+            }
+        }
+
+        long bestSum = Long.MAX_VALUE;
+        long bestA = -1, bestB = -1, bestC = -1;
+
+        // Try each divisor a for the w‑dimension
+        for (long a : divsN) {
+            if (a > w || w % a != 0) continue;
+            long rem = n / a;
+            // Collect divisors of rem for the h‑dimension
+            List<Long> divsRem = new ArrayList<>();
+            for (long i = 1; i * i <= rem; i++) {
+                if (rem % i == 0) {
+                    divsRem.add(i);
+                    if (i != rem / i) {
+                        divsRem.add(rem / i);
+                    }
+                }
+            }
+            for (long b : divsRem) {
+                if (b > h || h % b != 0) continue;
+                long c = rem / b;
+                if (c > d || d % c != 0) continue;
+                long sum = a + b + c;  // minimize total number of pieces
+                if (sum < bestSum) {
+                    bestSum = sum;
+                    bestA = a;
+                    bestB = b;
+                    bestC = c;
+                }
+            }
+        }
+
+        if (bestA == -1) {
+            System.out.println(-1);
+        } else {
+            System.out.println((bestA - 1) + " " + (bestB - 1) + " " + (bestC - 1));
+        }
+    }
+}
