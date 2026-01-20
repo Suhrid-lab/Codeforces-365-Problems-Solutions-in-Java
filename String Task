@@ -1,0 +1,17 @@
+import java.io.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String s = br.readLine();
+        StringBuilder out = new StringBuilder();
+        String vowels = "aeiouyAEIOUY";
+
+        for (char c : s.toCharArray()) {
+            if (vowels.indexOf(c) == -1) {
+                out.append('.').append(Character.toLowerCase(c));
+            }
+        }
+        System.out.print(out.toString());
+    }
+}
