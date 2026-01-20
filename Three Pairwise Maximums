@@ -1,0 +1,30 @@
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int t = sc.nextInt();
+
+        while (t-- > 0) {
+            long x = sc.nextLong();
+            long y = sc.nextLong();
+            long z = sc.nextLong();
+
+            long max = Math.max(x, Math.max(y, z));
+            int cnt = 0;
+            if (x == max) cnt++;
+            if (y == max) cnt++;
+            if (z == max) cnt++;
+
+            if (cnt < 2) {
+                System.out.println("NO");
+            } else {
+                long a = Math.min(x, y);
+                long b = Math.min(x, z);
+                long c = Math.min(y, z);
+                System.out.println("YES");
+                System.out.println(a + " " + b + " " + c);
+            }
+        }
+    }
+}
