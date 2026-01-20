@@ -1,0 +1,100 @@
+import java.util.*;
+
+public class Chocolate {
+    static class Rectangle {
+        int x1, y1, x2, y2;
+        
+        Rectangle(int x1, int y1, int x2, int y2) {
+            this.x1 = x1;
+            this.y1 = y1;
+            this.x2 = x2;
+            this.y2 = y2;
+        }
+        
+        int area() {
+            return (x2 - x1) * (y2 - y1);
+        }
+    }
+    
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int W = sc.nextInt();
+        int H = sc.nextInt();
+        int n = sc.nextInt();
+        
+        // Read breaks
+        int[][] breaks = new int[n][4];
+        for (int i = 0; i < n; i++) {
+            breaks[i][0] = sc.nextInt();
+            breaks[i][1] = sc.nextInt();
+            breaks[i][2] = sc.nextInt();
+            breaks[i][3] = sc.nextInt();
+        }
+        
+        // Initial rectangle
+        List<Rectangle> rects = new ArrayList<>();
+        rects.add(new Rectangle(0, 0, W, H));
+        
+        // Process breaks in any order - we need to find a valid order
+        // Since n <= 100, we can try to find which break to process next
+        boolean[] processed = new boolean[n];
+        int processedCount = 0;
+        
+        while (processedCount < n) {
+            for (int i = 0; i < n; i++) {
+                if (processed[i]) continue;
+                
+                int x1 = breaks[i][0], y1 = breaks[i][1];
+                int x2 = breaks[i][2], y2 = breaks[i][3];
+                
+                // Check if this break can be applied to any rectangle
+                for (int j = 0; j < rects.size(); j++) {
+                    Rectangle r = rects.get(j);
+                    
+                    if (x1 == x2) { // vertical break
+                        if (x1 > r.x1 && x1 < r.x2 && y1 == r.y1 && y2 == r.y2) {
+                            // Split rectangle
+                            Rectangle left = new Rectangle(r.x1, r.y1, x1, r.y2);
+                            Rectangle right = new Rectangle(x1, r.y1, r.x2, r.y2);
+                            rects.remove(j);
+                            rects.add(left);
+                            rects.add(right);
+                            processed[i] = true;
+                            processedCount++;
+                            break;
+                        }
+                    } else if (y1 == y2) { // horizontal break
+                        if (y1 > r.y1 && y1 < r.y2 && x1 == r.x1 && x2 == r.x2) {
+                            // Split rectangle
+                            Rectangle bottom = new Rectangle(r.x1, r.y1, r.x2, y1);
+                            Rectangle top = new Rectangle(r.x1, y1, r.x2, r.y2);
+                            rects.remove(j);
+                            rects.add(bottom);
+                            rects.add(top);
+                            processed[i] = true;
+                            processedCount++;
+                            break;
+                        }
+                    }
+                }
+                if (processed[i]) break;
+            }
+        }
+        
+        // Collect areas
+        int[] areas = new int[rects.size()];
+        for (int i = 0; i < rects.size(); i++) {
+            areas[i] = rects.get(i).area();
+        }
+        
+        // Sort in increasing order
+        Arrays.sort(areas);
+        
+        // Output
+        for (int i = 0; i < areas.length; i++) {
+            System.out.print(areas[i]);
+            if (i < areas.length - 1) System.out.print(" ");
+        }
+        System.out.println();
+    }
+}
