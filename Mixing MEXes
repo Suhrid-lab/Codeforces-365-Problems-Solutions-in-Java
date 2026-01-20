@@ -1,0 +1,74 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int t = Integer.parseInt(br.readLine().trim());
+        StringBuilder sb = new StringBuilder();
+        while (t-- > 0) {
+            int n = Integer.parseInt(br.readLine().trim());
+            long S = 0;
+            long D = 0;
+            int totalElements = 0;
+            long[] mex = new long[n];
+            long[] nextMex = new long[n];
+            Map<Integer, Integer> globalCnt = new HashMap<>();
+
+            for (int i = 0; i < n; i++) {
+                StringTokenizer st = new StringTokenizer(br.readLine());
+                int len = Integer.parseInt(st.nextToken());
+                totalElements += len;
+
+                Map<Integer, Integer> localCnt = new HashMap<>();
+                boolean[] present = new boolean[len + 2];   // only care about 0 .. len+1
+
+                for (int j = 0; j < len; j++) {
+                    int x = Integer.parseInt(st.nextToken());
+                    localCnt.put(x, localCnt.getOrDefault(x, 0) + 1);
+                    globalCnt.put(x, globalCnt.getOrDefault(x, 0) + 1);
+                    if (0 <= x && x <= len + 1) {
+                        present[x] = true;
+                    }
+                }
+
+                // compute current MEX
+                int curMex = 0;
+                while (curMex <= len + 1 && present[curMex]) {
+                    curMex++;
+                }
+                // compute MEX after adding curMex
+                int nxt = curMex + 1;
+                while (nxt <= len + 1 && present[nxt]) {
+                    nxt++;
+                }
+
+                mex[i] = curMex;
+                nextMex[i] = nxt;
+                S += curMex;
+
+                // donor contribution for this array
+                for (Map.Entry<Integer, Integer> e : localCnt.entrySet()) {
+                    int val = e.getKey();
+                    int cnt = e.getValue();
+                    if (cnt == 1 && val < curMex) {
+                        D += (val - curMex);
+                    }
+                }
+            }
+
+            long moves = (long) totalElements * (n - 1);
+            long R = 0;
+            for (int i = 0; i < n; i++) {
+                long val = mex[i];
+                int occ = globalCnt.getOrDefault((int) val, 0);
+                long diff = nextMex[i] - val;
+                R += (long) occ * diff;
+            }
+
+            long ans = S * moves + (long) (n - 1) * D + R;
+            sb.append(ans).append('\n');
+        }
+        System.out.print(sb);
+    }
+}
