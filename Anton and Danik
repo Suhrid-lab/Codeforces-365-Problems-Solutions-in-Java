@@ -1,0 +1,19 @@
+import java.io.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        br.readLine(); // read n, not strictly needed
+        String s = br.readLine();
+
+        int a = 0, d = 0;
+        for (char c : s.toCharArray()) {
+            if (c == 'A') a++;
+            else d++;
+        }
+
+        if (a > d) System.out.print("Anton");
+        else if (d > a) System.out.print("Danik");
+        else System.out.print("Friendship");
+    }
+}
