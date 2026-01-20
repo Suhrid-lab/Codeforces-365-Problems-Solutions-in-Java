@@ -1,0 +1,28 @@
+import java.io.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String s = br.readLine();
+
+        boolean ok = true;
+        for (int i = 1; i < s.length(); i++) {
+            if (Character.isLowerCase(s.charAt(i))) {
+                ok = false;
+                break;
+            }
+        }
+
+        if (ok) {
+            StringBuilder sb = new StringBuilder();
+            for (char c : s.toCharArray()) {
+                sb.append(Character.isUpperCase(c)
+                        ? Character.toLowerCase(c)
+                        : Character.toUpperCase(c));
+            }
+            System.out.print(sb.toString());
+        } else {
+            System.out.print(s);
+        }
+    }
+}
