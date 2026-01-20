@@ -1,0 +1,98 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static class Lady {
+        int b, i, r;
+        Lady(int b, int i, int r) {
+            this.b = b; this.i = i; this.r = r;
+        }
+    }
+
+    static int size;
+    static int[] seg;
+
+    static void update(int pos, int val) {
+        for (pos += size; pos > 0; pos >>= 1)
+            seg[pos] = Math.max(seg[pos], val);
+    }
+
+    static int query(int l, int r) {
+        int res = -1;
+        for (l += size, r += size; l <= r; l >>= 1, r >>= 1) {
+            if ((l & 1) == 1) res = Math.max(res, seg[l++]);
+            if ((r & 1) == 0) res = Math.max(res, seg[r--]);
+        }
+        return res;
+    }
+
+    public static void main(String[] args) throws Exception {
+        FastScanner fs = new FastScanner(System.in);
+        int N = fs.nextInt();
+
+        int[] B = new int[N], I = new int[N], R = new int[N];
+        for (int i = 0; i < N; i++) B[i] = fs.nextInt();
+        for (int i = 0; i < N; i++) I[i] = fs.nextInt();
+        for (int i = 0; i < N; i++) R[i] = fs.nextInt();
+
+        Lady[] a = new Lady[N];
+        for (int i = 0; i < N; i++)
+            a[i] = new Lady(B[i], I[i], R[i]);
+
+        Arrays.sort(a, (x, y) -> y.b - x.b);
+
+        int[] comp = new int[N];
+        for (int i = 0; i < N; i++) comp[i] = a[i].i;
+        Arrays.sort(comp);
+        size = 1;
+        while (size < N) size <<= 1;
+        seg = new int[size << 1];
+        Arrays.fill(seg, -1);
+
+        int ans = 0;
+        for (int i = 0; i < N; ) {
+            int j = i;
+            while (j < N && a[j].b == a[i].b) j++;
+
+            for (int k = i; k < j; k++) {
+                int idx = Arrays.binarySearch(comp, a[k].i) + 1;
+                if (idx < N && query(idx, N - 1) > a[k].r)
+                    ans++;
+            }
+
+            for (int k = i; k < j; k++) {
+                int idx = Arrays.binarySearch(comp, a[k].i);
+                update(idx, a[k].r);
+            }
+            i = j;
+        }
+
+        System.out.println(ans);
+    }
+
+    // Fast input
+    static class FastScanner {
+        byte[] buf = new byte[1 << 16];
+        int idx = 0, size = 0;
+        InputStream in;
+        FastScanner(InputStream in) { this.in = in; }
+        int read() throws IOException {
+            if (idx >= size) {
+                size = in.read(buf);
+                idx = 0;
+                if (size <= 0) return -1;
+            }
+            return buf[idx++];
+        }
+        int nextInt() throws IOException {
+            int c, s = 1, x = 0;
+            do c = read(); while (c <= ' ');
+            if (c == '-') { s = -1; c = read(); }
+            while (c > ' ') {
+                x = x * 10 + c - '0';
+                c = read();
+            }
+            return x * s;
+        }
+    }
+}
