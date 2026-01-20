@@ -1,0 +1,81 @@
+import java.util.*;
+import java.io.*;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int t = Integer.parseInt(br.readLine());
+        StringBuilder sb = new StringBuilder();
+        while (t-- > 0) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int n = Integer.parseInt(st.nextToken());
+            int k = Integer.parseInt(st.nextToken());
+            int[] a = new int[n + 1];
+            st = new StringTokenizer(br.readLine());
+            for (int i = 1; i <= n; i++) {
+                a[i] = Integer.parseInt(st.nextToken());
+            }
+
+            // first[v] = earliest index i with a[i] >= v
+            int[] first = new int[k + 2];
+            Arrays.fill(first, n + 1);
+            for (int v = 1; v <= k; v++) {
+                for (int i = 1; i <= n; i++) {
+                    if (a[i] >= v) {
+                        first[v] = i;
+                        break;
+                    }
+                }
+            }
+
+            // collect points (position, value) where first[v] is valid
+            List<int[]> pointsList = new ArrayList<>();
+            pointsList.add(new int[]{0, 0}); // dummy point
+            for (int v = 1; v <= k; v++) {
+                if (first[v] <= n) {
+                    pointsList.add(new int[]{first[v], v});
+                }
+            }
+            int m = pointsList.size() - 1; // number of real points
+            int[][] points = new int[m + 1][2];
+            for (int i = 0; i <= m; i++) {
+                points[i][0] = pointsList.get(i)[0];
+                points[i][1] = pointsList.get(i)[1];
+            }
+
+            // dp[i][c] = max happiness with last upgrade at point i, using c cards
+            int[][] dp = new int[m + 1][k + 1];
+            for (int i = 0; i <= m; i++) {
+                Arrays.fill(dp[i], -1_000_000_000);
+            }
+            dp[0][0] = 0;
+
+            for (int i = 0; i < m; i++) {
+                for (int j = i + 1; j <= m; j++) {
+                    if (points[j][0] == points[i][0]) continue; // same position -> cannot take both
+                    for (int c = 0; c <= k; c++) {
+                        if (dp[i][c] < 0) continue;
+                        int newC = c + points[j][1];
+                        if (newC > k) continue;
+                        int gain = points[i][1] * (points[j][0] - points[i][0] - 1) + points[j][1];
+                        int val = dp[i][c] + gain;
+                        if (val > dp[j][newC]) {
+                            dp[j][newC] = val;
+                        }
+                    }
+                }
+            }
+
+            int ans = 0;
+            for (int i = 0; i <= m; i++) {
+                for (int c = 0; c <= k; c++) {
+                    if (dp[i][c] < 0) continue;
+                    int total = dp[i][c] + points[i][1] * (n - points[i][0]);
+                    if (total > ans) ans = total;
+                }
+            }
+            sb.append(ans).append('\n');
+        }
+        System.out.print(sb);
+    }
+}
