@@ -1,0 +1,96 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static int N, M, B;
+    static int[] a, next, cnt, last, block;
+
+    static void rebuild(int b) {
+        int l = b * B;
+        int r = Math.min(N, l + B);
+        for (int i = r - 1; i >= l; i--) {
+            int j = i + a[i];
+            if (j >= N || block[j] != b) {
+                next[i] = j;
+                cnt[i] = 1;
+                last[i] = i;
+            } else {
+                next[i] = next[j];
+                cnt[i] = cnt[j] + 1;
+                last[i] = last[j];
+            }
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        FastScanner fs = new FastScanner(System.in);
+        N = fs.nextInt();
+        M = fs.nextInt();
+
+        a = new int[N];
+        for (int i = 0; i < N; i++) a[i] = fs.nextInt();
+
+        B = (int) Math.sqrt(N) + 1;
+        block = new int[N];
+        for (int i = 0; i < N; i++) block[i] = i / B;
+
+        next = new int[N];
+        cnt = new int[N];
+        last = new int[N];
+
+        for (int i = 0; i <= N / B; i++) rebuild(i);
+
+        StringBuilder out = new StringBuilder();
+
+        while (M-- > 0) {
+            int t = fs.nextInt();
+            if (t == 0) {
+                int x = fs.nextInt() - 1;
+                int y = fs.nextInt();
+                a[x] = y;
+                rebuild(block[x]);
+            } else {
+                int x = fs.nextInt() - 1;
+                int jumps = 0;
+                int pos = x;
+                while (pos < N) {
+                    jumps += cnt[pos];
+                    if (next[pos] >= N) {
+                        out.append(last[pos] + 1).append(" ").append(jumps).append('\n');
+                        break;
+                    }
+                    pos = next[pos];
+                }
+            }
+        }
+        System.out.print(out);
+    }
+
+    // Fast I/O
+    static class FastScanner {
+        private final byte[] buffer = new byte[1 << 16];
+        private int ptr = 0, len = 0;
+        private final InputStream in;
+        FastScanner(InputStream in) { this.in = in; }
+
+        int read() throws IOException {
+            if (ptr >= len) {
+                len = in.read(buffer);
+                ptr = 0;
+                if (len <= 0) return -1;
+            }
+            return buffer[ptr++];
+        }
+
+        int nextInt() throws IOException {
+            int c, s = 1, x = 0;
+            do { c = read(); } while (c <= ' ');
+            if (c == '-') { s = -1; c = read(); }
+            while (c > ' ') {
+                x = x * 10 + (c - '0');
+                c = read();
+            }
+            return x * s;
+        }
+    }
+}
