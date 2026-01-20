@@ -1,0 +1,25 @@
+import java.io.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder out = new StringBuilder();
+        int t = Integer.parseInt(br.readLine().trim());
+
+        while (t-- > 0) {
+            int n = Integer.parseInt(br.readLine().trim());
+
+            if (n <= 30) {
+                out.append("NO\n");
+            } else {
+                out.append("YES\n");
+                if (n == 36 || n == 40 || n == 44) {
+                    out.append("6 10 15 ").append(n - 31).append('\n');
+                } else {
+                    out.append("6 10 14 ").append(n - 30).append('\n');
+                }
+            }
+        }
+        System.out.print(out);
+    }
+}
