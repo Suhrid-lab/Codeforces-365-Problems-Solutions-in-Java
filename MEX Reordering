@@ -1,0 +1,48 @@
+import java.io.*;
+import java.util.*;
+ 
+public class Main {
+    static int mex(int[] a, int l, int r) {
+        boolean[] seen = new boolean[a.length + 2];
+        for (int i = l; i <= r; i++) {
+            if (a[i] <= a.length) seen[a[i]] = true;
+        }
+        for (int i = 0; ; i++) if (!seen[i]) return i;
+    }
+ 
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder out = new StringBuilder();
+        int t = Integer.parseInt(br.readLine().trim());
+ 
+        while (t-- > 0) {
+            int n = Integer.parseInt(br.readLine().trim());
+            int[] a = new int[n];
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            boolean hasZero = false;
+ 
+            for (int i = 0; i < n; i++) {
+                a[i] = Integer.parseInt(st.nextToken());
+                if (a[i] == 0) hasZero = true;
+            }
+ 
+            if (!hasZero) {
+                out.append("NO\n");
+                continue;
+            }
+ 
+            Arrays.sort(a);
+            boolean ok = true;
+ 
+            for (int i = 0; i < n - 1 && ok; i++) {
+                if (mex(a, 0, i) == mex(a, i + 1, n - 1)) {
+                    ok = false;
+                }
+            }
+ 
+            out.append(ok ? "YES\n" : "NO\n");
+        }
+ 
+        System.out.print(out);
+    }
+}
