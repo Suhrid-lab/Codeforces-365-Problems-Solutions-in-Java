@@ -1,0 +1,26 @@
+import java.util.Scanner;
+
+public class CFlea {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        long n = scanner.nextLong();
+        long m = scanner.nextLong();
+        long s = scanner.nextLong();
+        
+        // Calculate horizontal reach
+        long horizontalCells = (n + s - 1) / s;
+        long horizontalRemainder = n % s;
+        if (horizontalRemainder == 0) horizontalRemainder = s;
+        
+        // Calculate vertical reach  
+        long verticalCells = (m + s - 1) / s;
+        long verticalRemainder = m % s;
+        if (verticalRemainder == 0) verticalRemainder = s;
+        
+        // Result is product of reach in both dimensions
+        long result = horizontalCells * verticalCells * horizontalRemainder * verticalRemainder;
+        
+        System.out.println(result);
+    }
+}
