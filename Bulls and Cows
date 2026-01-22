@@ -1,0 +1,90 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    static class Guess {
+        String s;
+        int bulls, cows;
+        Guess(String s, int b, int c) {
+            this.s = s;
+            this.bulls = b;
+            this.cows = c;
+        }
+    }
+
+    static int[] check(String a, String b) {
+        int bulls = 0, cows = 0;
+        boolean[] usedA = new boolean[4];
+        boolean[] usedB = new boolean[4];
+
+        for (int i = 0; i < 4; i++) {
+            if (a.charAt(i) == b.charAt(i)) {
+                bulls++;
+                usedA[i] = usedB[i] = true;
+            }
+        }
+
+        for (int i = 0; i < 4; i++) {
+            if (usedA[i]) continue;
+            for (int j = 0; j < 4; j++) {
+                if (!usedB[j] && a.charAt(i) == b.charAt(j)) {
+                    cows++;
+                    usedB[j] = true;
+                    break;
+                }
+            }
+        }
+
+        return new int[]{bulls, cows};
+    }
+
+    static boolean distinct(String s) {
+        boolean[] seen = new boolean[10];
+        for (int i = 0; i < 4; i++) {
+            int d = s.charAt(i) - '0';
+            if (seen[d]) return false;
+            seen[d] = true;
+        }
+        return true;
+    }
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine().trim());
+
+        Guess[] guesses = new Guess[n];
+        for (int i = 0; i < n; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            String s = st.nextToken();
+            int b = Integer.parseInt(st.nextToken());
+            int c = Integer.parseInt(st.nextToken());
+            guesses[i] = new Guess(s, b, c);
+        }
+
+        List<String> valid = new ArrayList<>();
+
+        for (int x = 0; x < 10000; x++) {
+            String cand = String.format("%04d", x);
+            if (!distinct(cand)) continue;
+
+            boolean ok = true;
+            for (Guess g : guesses) {
+                int[] bc = check(cand, g.s);
+                if (bc[0] != g.bulls || bc[1] != g.cows) {
+                    ok = false;
+                    break;
+                }
+            }
+            if (ok) valid.add(cand);
+        }
+
+        if (valid.isEmpty()) {
+            System.out.println("Incorrect data");
+        } else if (valid.size() == 1) {
+            System.out.println(valid.get(0));
+        } else {
+            System.out.println("Need more data");
+        }
+    }
+}
