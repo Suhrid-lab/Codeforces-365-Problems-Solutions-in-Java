@@ -1,0 +1,65 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        FastScanner fs = new FastScanner(System.in);
+        int n = fs.nextInt();
+        long d = fs.nextLong();
+
+        long[] a = new long[n];
+        for (int i = 0; i < n; i++) a[i] = fs.nextLong();
+
+        Arrays.sort(a);
+
+        long count = 0;
+        int r = 0;
+
+        for (int l = 0; l < n; l++) {
+            while (r < n && a[r] - a[l] <= d) r++;
+            count += Math.max(0, r - l - 1);
+        }
+
+        System.out.println(count * 2);
+    }
+
+    // Fast input reader
+    static class FastScanner {
+        private final byte[] buffer = new byte[1 << 16];
+        private int ptr = 0, len = 0;
+        private final InputStream in;
+
+        FastScanner(InputStream in) {
+            this.in = in;
+        }
+
+        private int read() throws IOException {
+            if (ptr >= len) {
+                len = in.read(buffer);
+                ptr = 0;
+                if (len <= 0) return -1;
+            }
+            return buffer[ptr++];
+        }
+
+        long nextLong() throws IOException {
+            int c;
+            while ((c = read()) <= ' ' && c != -1) ;
+            boolean neg = false;
+            if (c == '-') {
+                neg = true;
+                c = read();
+            }
+            long val = 0;
+            while (c > ' ') {
+                val = val * 10 + (c - '0');
+                c = read();
+            }
+            return neg ? -val : val;
+        }
+
+        int nextInt() throws IOException {
+            return (int) nextLong();
+        }
+    }
+}
