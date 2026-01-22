@@ -1,0 +1,44 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] s = br.readLine().trim().split(" ");
+        double A = Double.parseDouble(s[0]);
+        double B = Double.parseDouble(s[1]);
+        double C = Double.parseDouble(s[2]);
+
+        if (A == 0) {
+            if (B == 0) {
+                if (C == 0) {
+                    System.out.println(-1);
+                } else {
+                    System.out.println(0);
+                }
+            } else {
+                System.out.println(1);
+                System.out.printf(Locale.US, "%.5f%n", -C / B);
+            }
+            return;
+        }
+
+        double D = B * B - 4 * A * C;
+
+        if (D < 0) {
+            System.out.println(0);
+        } else if (D == 0) {
+            System.out.println(1);
+            System.out.printf(Locale.US, "%.5f%n", -B / (2 * A));
+        } else {
+            double sqrtD = Math.sqrt(D);
+            double x1 = (-B - sqrtD) / (2 * A);
+            double x2 = (-B + sqrtD) / (2 * A);
+            if (x1 > x2) {
+                double t = x1; x1 = x2; x2 = t;
+            }
+            System.out.println(2);
+            System.out.printf(Locale.US, "%.5f%n%.5f%n", x1, x2);
+        }
+    }
+}
