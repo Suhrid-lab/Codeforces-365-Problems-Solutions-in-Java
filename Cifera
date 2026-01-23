@@ -1,0 +1,24 @@
+import java.io.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        long k = Long.parseLong(br.readLine().trim());
+        long l = Long.parseLong(br.readLine().trim());
+
+        int power = 0;
+        long temp = l;
+
+        while (temp % k == 0) {
+            temp /= k;
+            power++;
+        }
+
+        if (temp == 1 && power >= 1) {
+            System.out.println("YES");
+            System.out.println(power - 1);
+        } else {
+            System.out.println("NO");
+        }
+    }
+}
