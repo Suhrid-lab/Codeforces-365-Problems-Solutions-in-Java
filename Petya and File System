@@ -1,0 +1,47 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    static class Node {
+        Map<String, Node> ch = new HashMap<>();
+        int files;
+    }
+
+    static int maxFolders = 0, maxFiles = 0;
+
+    static int[] dfs(Node u) {
+        int folderCnt = 0, fileCnt = u.files;
+        for (Node v : u.ch.values()) {
+            int[] r = dfs(v);
+            folderCnt += 1 + r[0];
+            fileCnt += r[1];
+        }
+        maxFolders = Math.max(maxFolders, folderCnt);
+        maxFiles = Math.max(maxFiles, fileCnt);
+        return new int[]{folderCnt, fileCnt};
+    }
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        Map<String, Node> disks = new HashMap<>();
+
+        String line;
+        while ((line = br.readLine()) != null && !line.isEmpty()) {
+            String[] parts = line.split("\\\\");
+            String disk = parts[0];
+            Node cur = disks.computeIfAbsent(disk, k -> new Node());
+
+            for (int i = 1; i < parts.length - 1; i++)
+                cur = cur.ch.computeIfAbsent(parts[i], k -> new Node());
+
+            cur.files++;
+        }
+
+        for (Node root : disks.values())
+            for (Node v : root.ch.values())
+                dfs(v);
+
+        System.out.println(maxFolders + " " + maxFiles);
+    }
+}
