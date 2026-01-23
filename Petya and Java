@@ -1,0 +1,26 @@
+import java.io.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String n = br.readLine().trim();
+
+        if (fits(n, "127")) {
+            System.out.println("byte");
+        } else if (fits(n, "32767")) {
+            System.out.println("short");
+        } else if (fits(n, "2147483647")) {
+            System.out.println("int");
+        } else if (fits(n, "9223372036854775807")) {
+            System.out.println("long");
+        } else {
+            System.out.println("BigInteger");
+        }
+    }
+
+    static boolean fits(String n, String max) {
+        if (n.length() != max.length())
+            return n.length() < max.length();
+        return n.compareTo(max) <= 0;
+    }
+}
