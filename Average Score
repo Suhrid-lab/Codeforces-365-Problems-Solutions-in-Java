@@ -1,0 +1,55 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static class Pair {
+        int val, idx;
+        Pair(int v, int i) { val = v; idx = i; }
+    }
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine().trim());
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int a = Integer.parseInt(st.nextToken());
+        int b = Integer.parseInt(st.nextToken());
+
+        st = new StringTokenizer(br.readLine());
+        Pair[] arr = new Pair[n];
+        for (int i = 0; i < n; i++)
+            arr[i] = new Pair(Integer.parseInt(st.nextToken()), i);
+
+        if (a == b) {
+            int[] res = new int[n];
+            for (int i = 0; i < a; i++) res[i] = 1;
+            for (int i = a; i < n; i++) res[i] = 2;
+            print(res);
+            return;
+        }
+
+        Arrays.sort(arr, (x, y) -> {
+            if (x.val != y.val)
+                return (b > a) ? y.val - x.val : x.val - y.val;
+            return x.idx - y.idx;
+        });
+
+        boolean[] isOne = new boolean[n];
+        for (int i = 0; i < a; i++)
+            isOne[arr[i].idx] = true;
+
+        int[] res = new int[n];
+        for (int i = 0; i < n; i++)
+            res[i] = isOne[i] ? 1 : 2;
+
+        print(res);
+    }
+
+    static void print(int[] a) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < a.length; i++) {
+            if (i > 0) sb.append(' ');
+            sb.append(a[i]);
+        }
+        System.out.print(sb);
+    }
+}
