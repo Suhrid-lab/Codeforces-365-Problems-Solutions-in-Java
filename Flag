@@ -1,0 +1,34 @@
+import java.io.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        String[] nm = br.readLine().split(" ");
+        int n = Integer.parseInt(nm[0]);
+        int m = Integer.parseInt(nm[1]);
+
+        String prev = "";
+        for (int i = 0; i < n; i++) {
+            String row = br.readLine();
+
+            // Check all characters in the row are the same
+            for (int j = 1; j < m; j++) {
+                if (row.charAt(j) != row.charAt(0)) {
+                    System.out.println("NO");
+                    return;
+                }
+            }
+
+            // Check adjacent rows differ
+            if (i > 0 && row.charAt(0) == prev.charAt(0)) {
+                System.out.println("NO");
+                return;
+            }
+
+            prev = row;
+        }
+
+        System.out.println("YES");
+    }
+}
