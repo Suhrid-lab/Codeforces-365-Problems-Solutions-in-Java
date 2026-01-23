@@ -1,0 +1,39 @@
+import java.io.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder out = new StringBuilder();
+
+        int t = Integer.parseInt(br.readLine().trim());
+        while (t-- > 0) {
+            String[] p = br.readLine().split(" ");
+            long a = Long.parseLong(p[0]); // white
+            long b = Long.parseLong(p[1]); // dark
+
+            out.append(Math.max(calc(a, b), calc(b, a))).append('\n');
+        }
+        System.out.print(out);
+    }
+
+    // first color gets odd layers (1,4,16...), second gets even layers (2,8,32...)
+    static int calc(long first, long second) {
+        long size = 1;
+        int layers = 0;
+        boolean turn = true;
+
+        while (true) {
+            if (turn) {
+                if (first < size) break;
+                first -= size;
+            } else {
+                if (second < size) break;
+                second -= size;
+            }
+            layers++;
+            size <<= 1;
+            turn = !turn;
+        }
+        return layers;
+    }
+}
