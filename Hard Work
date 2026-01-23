@@ -1,0 +1,43 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    static String clean(String s) {
+        StringBuilder sb = new StringBuilder();
+        for (char c : s.toCharArray()) {
+            if (c != '-' && c != '_' && c != ';') {
+                sb.append(Character.toLowerCase(c));
+            }
+        }
+        return sb.toString();
+    }
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        String a = clean(br.readLine());
+        String b = clean(br.readLine());
+        String c = clean(br.readLine());
+
+        int n = Integer.parseInt(br.readLine());
+
+        String[] s = {a, b, c};
+        Set<String> valid = new HashSet<>();
+
+        // Generate all permutations (3! = 6)
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+                for (int k = 0; k < 3; k++)
+                    if (i != j && j != k && i != k)
+                        valid.add(s[i] + s[j] + s[k]);
+
+        StringBuilder out = new StringBuilder();
+        for (int i = 0; i < n; i++) {
+            String ans = clean(br.readLine());
+            out.append(valid.contains(ans) ? "ACC\n" : "WA\n");
+        }
+
+        System.out.print(out);
+    }
+}
