@@ -1,0 +1,67 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        FastScanner fs = new FastScanner(System.in);
+        int n = fs.nextInt();
+        long ans = 0;
+
+        long prev = fs.nextLong();
+        long cnt = 1;
+
+        for (int i = 1; i < n; i++) {
+            long x = fs.nextLong();
+            if (x == prev) {
+                cnt++;
+            } else {
+                ans += cnt * (cnt + 1) / 2;
+                cnt = 1;
+                prev = x;
+            }
+        }
+        ans += cnt * (cnt + 1) / 2;
+
+        System.out.println(ans);
+    }
+
+    // Fast input for 0ms performance
+    static class FastScanner {
+        private final byte[] buffer = new byte[1 << 16];
+        private int ptr = 0, len = 0;
+        private final InputStream in;
+
+        FastScanner(InputStream in) {
+            this.in = in;
+        }
+
+        int read() throws IOException {
+            if (ptr >= len) {
+                len = in.read(buffer);
+                ptr = 0;
+                if (len <= 0) return -1;
+            }
+            return buffer[ptr++];
+        }
+
+        long nextLong() throws IOException {
+            int c;
+            do { c = read(); } while (c <= ' ');
+            boolean neg = false;
+            if (c == '-') {
+                neg = true;
+                c = read();
+            }
+            long val = 0;
+            while (c > ' ') {
+                val = val * 10 + (c - '0');
+                c = read();
+            }
+            return neg ? -val : val;
+        }
+
+        int nextInt() throws IOException {
+            return (int) nextLong();
+        }
+    }
+}
