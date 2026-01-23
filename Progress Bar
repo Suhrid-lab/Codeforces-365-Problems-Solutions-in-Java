@@ -1,0 +1,23 @@
+import java.io.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] s = br.readLine().split(" ");
+        int n = Integer.parseInt(s[0]);
+        int k = Integer.parseInt(s[1]);
+        int t = Integer.parseInt(s[2]);
+
+        int filled = n * k * t / 100;
+        StringBuilder out = new StringBuilder();
+
+        for (int i = 0; i < n; i++) {
+            int cur = Math.min(k, filled);
+            out.append(cur);
+            if (i + 1 < n) out.append(' ');
+            filled -= cur;
+        }
+
+        System.out.println(out);
+    }
+}
