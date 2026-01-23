@@ -1,0 +1,52 @@
+import java.io.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] s = br.readLine().split(" ");
+        long h = Long.parseLong(s[0]);
+        long w = Long.parseLong(s[1]);
+
+        long bestH = 1, bestW = 1, bestArea = 1;
+
+        for (int k = 0; k <= 31; k++) {
+            long p = 1L << k;
+
+            // Case 1: H = p
+            if (p <= h) {
+                long lo = (long) Math.ceil(p / 1.25);
+                long hi = (long) Math.floor(p / 0.8);
+                lo = Math.max(lo, 1);
+                hi = Math.min(hi, w);
+                if (lo <= hi) {
+                    long W = hi;
+                    long area = p * W;
+                    if (area > bestArea || (area == bestArea && p > bestH)) {
+                        bestArea = area;
+                        bestH = p;
+                        bestW = W;
+                    }
+                }
+            }
+
+            // Case 2: W = p
+            if (p <= w) {
+                long lo = (long) Math.ceil(0.8 * p);
+                long hi = (long) Math.floor(1.25 * p);
+                lo = Math.max(lo, 1);
+                hi = Math.min(hi, h);
+                if (lo <= hi) {
+                    long H = hi;
+                    long area = H * p;
+                    if (area > bestArea || (area == bestArea && H > bestH)) {
+                        bestArea = area;
+                        bestH = H;
+                        bestW = p;
+                    }
+                }
+            }
+        }
+
+        System.out.println(bestH + " " + bestW);
+    }
+}
