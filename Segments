@@ -1,0 +1,43 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    static class Seg {
+        int l, r;
+        Seg(int l, int r) {
+            this.l = Math.min(l, r);
+            this.r = Math.max(l, r);
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine().trim());
+
+        Seg[] segs = new Seg[n];
+        for (int i = 0; i < n; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            segs[i] = new Seg(a, b);
+        }
+
+        Arrays.sort(segs, Comparator.comparingInt(s -> s.r));
+
+        List<Integer> nails = new ArrayList<>();
+        int last = Integer.MIN_VALUE;
+
+        for (Seg s : segs) {
+            if (last < s.l) {
+                last = s.r;
+                nails.add(last);
+            }
+        }
+
+        StringBuilder out = new StringBuilder();
+        out.append(nails.size()).append('\n');
+        for (int x : nails) out.append(x).append(' ');
+        System.out.println(out.toString().trim());
+    }
+}
