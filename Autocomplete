@@ -1,0 +1,23 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        
+        String s = br.readLine();
+        int n = Integer.parseInt(br.readLine());
+        
+        String best = null;
+        for (int i = 0; i < n; i++) {
+            String page = br.readLine();
+            if (page.startsWith(s)) {
+                if (best == null || page.compareTo(best) < 0) {
+                    best = page;
+                }
+            }
+        }
+        
+        System.out.println(best == null ? s : best);
+    }
+}
