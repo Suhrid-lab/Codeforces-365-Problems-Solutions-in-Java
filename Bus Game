@@ -1,0 +1,33 @@
+import java.io.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] s = br.readLine().split(" ");
+        long x = Long.parseLong(s[0]); // 100-yen coins
+        long y = Long.parseLong(s[1]); // 10-yen coins
+
+        boolean cielTurn = true;
+
+        while (true) {
+            boolean moved = false;
+
+            if (cielTurn) {
+                if (x >= 2 && y >= 2) { x -= 2; y -= 2; moved = true; }
+                else if (x >= 1 && y >= 12) { x -= 1; y -= 12; moved = true; }
+                else if (y >= 22) { y -= 22; moved = true; }
+            } else {
+                if (y >= 22) { y -= 22; moved = true; }
+                else if (x >= 1 && y >= 12) { x -= 1; y -= 12; moved = true; }
+                else if (x >= 2 && y >= 2) { x -= 2; y -= 2; moved = true; }
+            }
+
+            if (!moved) {
+                System.out.print(cielTurn ? "Hanako" : "Ciel");
+                return;
+            }
+
+            cielTurn = !cielTurn;
+        }
+    }
+}
