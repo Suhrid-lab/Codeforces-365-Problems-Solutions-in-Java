@@ -1,0 +1,41 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+        int c0 = Integer.parseInt(st.nextToken());
+        int d0 = Integer.parseInt(st.nextToken());
+
+        int[] dp = new int[n + 1];
+
+        for (int i = 0; i < m; i++) {
+            st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            int c = Integer.parseInt(st.nextToken());
+            int d = Integer.parseInt(st.nextToken());
+
+            int maxUse = a / b;
+            for (int k = 0; k < maxUse; k++) {
+                for (int dough = n; dough >= c; dough--) {
+                    dp[dough] = Math.max(dp[dough], dp[dough - c] + d);
+                }
+            }
+        }
+
+        int ans = 0;
+        for (int dough = 0; dough <= n; dough++) {
+            int total = dp[dough];
+            int rem = n - dough;
+            total += (rem / c0) * d0;
+            ans = Math.max(ans, total);
+        }
+
+        System.out.println(ans);
+    }
+}
